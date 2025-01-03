@@ -53,9 +53,8 @@ $app->configure('jwt');
 */
 
 $app->routeMiddleware([
-    'auth' => Tymon\JWTAuth\Http\Middleware\Authenticate::class, // Gunakan middleware JWT
-    'jwt.auth' => Tymon\JWTAuth\Middleware\GetUserFromToken::class, // Middleware untuk mengambil user dari token
-    'jwt.refresh' => Tymon\JWTAuth\Middleware\RefreshToken::class, // Middleware untuk refresh token
+    'auth' => App\Http\Middleware\Authenticate::class, // Gunakan middleware JWT
+    
 ]);
 
 /*

@@ -8,7 +8,7 @@ use Illuminate\Support\Facades\Hash;
 
 class AuthController extends Controller {
     public function __construct(){
-        $this->middleware('auth:api', ['except' => ['login','register']]);
+        $this->middleware('auth:api', ['except' => ['login','register','logout']]);
     }
     public function register(Request $request){
         //Tambahkan validasi
@@ -26,49 +26,31 @@ class AuthController extends Controller {
 
     }
 
-
-
-//Login dengan basic autentifikasi
-    // public function login(Request $request)
-    // {
-        
-    //     $pairs = $request->header('Authorization');
-    //     if (!$pairs || !str_starts_with($pairs, 'Basic ')) {
-    //         return response()->json(["message" => "Header Authorization tidak valid"], 400);
-    //     }
-
-    //     $pairs = substr($pairs, 6);
-    //     $pairs = base64_decode($pairs);
-    //     $pairs = explode(":", $pairs);
-
-    //     if (count($pairs) !== 2) {
-    //         return response()->json(["message" => "Format Authorization tidak valid"], 400);
-    //     }
-
-    //     $user = User::where('email', $pairs[0])->first();
-
-    //     if (!$user) {
-    //         return response()->json(["message" => "Email atau password salah"], 401);
-    //     }
-
-    //     if (Hash::check($pairs[1], $user->password)) {
-    //         return response()->json(["message" => "Login berhasil"]);
-    //     } else {
-    //         return response()->json(["message" => "Email atau password salah"], 401);
-    //     }
-    // }
-
-    //Login dengan JWT AUTH
-
     public function login(Request $request)
     {
-        $credentials = $request->only('email', 'password');
+        $pairs = $request->header('Authorization');
+        $pairs = substr($pairs, 6);
+        $pairs = base64_decode($pairs);
+        $pairs = explode(":",$pairs);
     
-        if (!$token = auth()->attempt($credentials)) {
-            return response()->json(['error' => 'Unauthorized'], 401);
+        if (!$token = auth()->attempt(['email' => $pairs[0], 'password' => $pairs[1]])) {
+            return response()->json(['message' => 'email atau password salah'], 401);
         }
     
         return $this->respondWithToken($token);
+    }
+
+    public function me() {
+        return response()->json(auth()->user());
+    }
+
+    public function refresh() {
+        return $this->respondWithToken(auth()->refresh());
+    }
+
+    public function logout() {
+        auth()->logout();
+        return response()->json(['message' => 'Berhasil log out!']);
     }
     
     protected function respondWithToken($token)

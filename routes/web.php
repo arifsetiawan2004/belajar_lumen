@@ -25,10 +25,24 @@ $router->get('/', function () use ($router) {
 
 $router->post('register', 'AuthController@register');
 $router->post('login', 'AuthController@login');
+$router->post('logout', 'AuthController@logout');
+$router->group(
+    [
+        'middleware' => 'api',
+    ],
+    function () use ($router) {
+        $router->post('refresh', 'AuthController@refresh');
+        $router->post('me', 'AuthController@me');
+    }
+);
 
 // CRUD
 
-// $router->group(['middleware' => 'auth'], function () use ($router){
+$router->group(
+    [
+        'middleware' => 'api',
+    ],
+    function () use ($router){
     $router->get('users', 'UserController@index');
     $router->get('user/{id}', 'UserController@show');
     $router->post('user/create', 'UserController@store');
@@ -36,7 +50,7 @@ $router->post('login', 'AuthController@login');
     $router->delete('user/{id}', 'UserController@delete');
     $router->post('user/{id}/upload', 'UserController@upload');
     $router->post('user/restore/{id}', 'UserController@restore');
-// });
+});
 
 
 
