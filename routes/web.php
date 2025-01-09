@@ -28,7 +28,7 @@ $router->post('login', 'AuthController@login');
 $router->post('logout', 'AuthController@logout');
 $router->group(
     [
-        'middleware' => 'api',
+        'middleware' => 'auth',
     ],
     function () use ($router) {
         $router->post('refresh', 'AuthController@refresh');
@@ -40,7 +40,7 @@ $router->group(
 
 $router->group(
     [
-        'middleware' => 'api',
+        'middleware' => 'auth',
     ],
     function () use ($router){
     $router->get('users', 'UserController@index');
