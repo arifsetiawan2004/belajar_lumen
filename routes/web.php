@@ -21,37 +21,32 @@ $router->get('/', function () use ($router) {
 //     return 'Hello Arif!!';
 // });
 
+
+$router->group(['middleware' => 'api_key'], function () use ($router){
 // autentifikasi
 
-$router->post('register', 'AuthController@register');
-$router->post('login', 'AuthController@login');
-$router->post('logout', 'AuthController@logout');
-$router->group(
-    [
-        'middleware' => 'auth',
-    ],
-    function () use ($router) {
-        $router->post('refresh', 'AuthController@refresh');
-        $router->post('me', 'AuthController@me');
-    }
-);
+    $router->post('register', 'AuthController@register');
+    $router->post('login', 'AuthController@login');
+    $router->post('logout', 'AuthController@logout');
+    $router->group(['middleware' => 'auth',],
+        function () use ($router) {
+            $router->post('refresh', 'AuthController@refresh');
+            $router->post('me', 'AuthController@me');
+    });
 
-// CRUD
+    // CRUD
 
-$router->group(
-    [
-        'middleware' => 'auth',
-    ],
-    function () use ($router){
-    $router->get('users', 'UserController@index');
-    $router->get('user/{id}', 'UserController@show');
-    $router->post('user/create', 'UserController@store');
-    $router->put('user/{id}', 'UserController@update');
-    $router->delete('user/{id}', 'UserController@delete');
-    $router->post('user/{id}/upload', 'UserController@upload');
-    $router->post('user/restore/{id}', 'UserController@restore');
+    $router->group(['middleware' => 'auth',],
+        function () use ($router){
+        $router->get('users', 'UserController@index');
+        $router->get('user/{id}', 'UserController@show');
+        $router->post('user/create', 'UserController@store');
+        $router->put('user/{id}', 'UserController@update');
+        $router->delete('user/{id}', 'UserController@delete');
+        $router->post('user/{id}/upload', 'UserController@upload');
+        $router->post('user/restore/{id}', 'UserController@restore');
+    });
 });
-
 
 
 

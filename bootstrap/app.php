@@ -53,8 +53,9 @@ $app->configure('jwt');
 */
 
 $app->routeMiddleware([
-    'auth' => App\Http\Middleware\Authenticate::class, // Gunakan middleware JWT
-    
+    'auth' => App\Http\Middleware\Authenticate::class,
+     // Gunakan middleware JWT
+    'api_key' => App\Http\Middleware\ApiKeyMiddleware::class,
 ]);
 
 /*
