@@ -43,11 +43,12 @@ class UserController extends Controller
         $this->validate($request,[
             'email' => 'required|email|unique:user',
             'name' => 'required|string|max:255',
-            // 'password' => 'required',
+            'password' => 'required',
         ]);
         $user = new User;
         $user->email = $request->email;
         $user->name = $request->name;
+        $user->password =$request->password;
         $user->save();
         return response()->json(["message" => "User Berhasil Dibuat"]);
     }
