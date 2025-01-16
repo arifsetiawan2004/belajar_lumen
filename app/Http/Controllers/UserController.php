@@ -7,6 +7,7 @@ use Illuminate\Http\Request;
 use App\Models\User;
 use Illuminate\Support\Str;
 use Illuminate\Support\Facades\Storage;
+use Illuminate\Support\Facades\Hash;
 
 class UserController extends Controller
 {
@@ -48,7 +49,7 @@ class UserController extends Controller
         $user = new User;
         $user->email = $request->email;
         $user->name = $request->name;
-        $user->password =$request->password;
+        $user->password = Hash::make($request->password);
         $user->save();
         return response()->json(["message" => "User Berhasil Dibuat"]);
     }
