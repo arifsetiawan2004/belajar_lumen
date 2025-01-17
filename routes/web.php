@@ -21,6 +21,7 @@ $router->get('/', function () use ($router) {
 //     return 'Hello Arif!!';
 // });
 
+$router->get('email/verify/{id}/{hash}','AuthController@verifyEmail');
 
 $router->group(['middleware' => 'api_key'], function () use ($router){
 // autentifikasi

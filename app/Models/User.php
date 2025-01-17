@@ -6,12 +6,13 @@ use Tymon\JWTAuth\Contracts\JWTSubject;
 use Illuminate\Auth\Authenticatable;
 use Illuminate\Contracts\Auth\Access\Authorizable as AuthorizableContract;
 use Illuminate\Contracts\Auth\Authenticatable as AuthenticatableContract;
+use Illuminate\Contracts\Auth\MustVerifyEmail;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Laravel\Lumen\Auth\Authorizable;
 use Illuminate\Database\Eloquent\SoftDeletes;
 
-class User extends Model implements AuthenticatableContract, AuthorizableContract, JWTSubject
+class User extends Model implements AuthenticatableContract, AuthorizableContract, JWTSubject, MustVerifyEmail
 {
     use Authenticatable, Authorizable, HasFactory, SoftDeletes;
 
@@ -50,4 +51,47 @@ class User extends Model implements AuthenticatableContract, AuthorizableContrac
     {
         return []; // Tambahkan klaim kustom jika diperlukan
     }
+
+    /** 
+     * Determine if the user has verified their email address.
+     * 
+     * @return bool
+    */
+    public function hasVerifiedEmail() {
+        if ($this->email_verified_at)
+            return TRUE;
+        return FALSE;
+    }
+
+    /**
+     * Mark the given user's email as verified.
+     * 
+     * @return bool
+     */
+    
+    public function markEmailAsVerified()
+    {
+        $this->email_verified_at = date('Y-m-d H:i:s');
+        $this->save();
+    }
+
+    /**
+     * Send the email verification notifiacation.
+     * 
+     * @return void
+     */
+    public function sendEmailVerificationNotification(){
+        // Kirim email
+    }
+
+    /**
+     * Get the email address that should be used for verification.
+     * 
+     * @return string
+     */
+    public function getEmailForVerification()
+    {
+        return $this->email;
+    }
+
 }

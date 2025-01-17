@@ -10,6 +10,7 @@ return [
         'api' => [
             'driver' => 'jwt',
             'provider' => 'user',
+            'hash' => false,
         ],
     ],
 
